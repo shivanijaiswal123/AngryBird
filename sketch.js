@@ -77,13 +77,17 @@ function setup() {
 
 function draw() {
   background(bkImg);
- 
+  
+  
+  if(keyWentDown('x'))
+    resetBird();
+  
   //allow bird to hit targets
   bird.displace(targets);
   //allow target to hit themself
   targets.displace(targets);
   //allow all sprites to rest on ground
-  allSprites.collide(ground)
+  allSprites.collide(ground);
   
   //hovering bird on slingshot
   if(attractToSlingshot == true){
@@ -102,7 +106,7 @@ function draw() {
   //draw everthing
   drawSprites();
 }
-
+  
 function mousePressed() {
   bird.rotateToDirection = true;
   bird.friction=0.01;
@@ -122,3 +126,16 @@ function mouseReleased() {
   bird.setSpeed(bird.getSpeed(), bird.getDirection());
   //console.log(mouseX,mouseY);
 }
+  
+function resetBird(){
+  attractToSlingshot = true;
+  leaveBird = false;
+    
+  bird.position.x = 110;
+  bird.position.y = 235;
+    
+  bird.rotateToDirection = false;
+  bird.rotation = 0;
+  bird.setVelocity (0, 0);
+}
+ 
