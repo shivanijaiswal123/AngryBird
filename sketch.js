@@ -1,3 +1,4 @@
+let targets;
 let bird;
 let gravity = 0.06;
 let attractToSlingshot = true;
@@ -34,10 +35,9 @@ function setup() {
     t.shapeColor = color(255, 100, 0);
     
     //gravity
-    t.velocity.y=5;
+    t.setSpeed(5, 90);
     //setting collision area
     t.setCollider("rectangle", 0, 0, 80,80);
-    
     //adding image
      if(k < 3){
       t.addImage(loadImage(images[k],images[k]));
@@ -63,27 +63,25 @@ function setup() {
   //A bird to hit targets
   bird = createSprite(110, 235, 30, 30);
   bird.shapeColor = color(128);
-  bird.setCollider("circle", 0, 0, 30)
+  bird.setCollider("circle", 0, 0, 38)
   bird.mouseActive= true;
-  
   var img =loadImage('bird_icon.png','bird_icon.png');
   bird.addImage(img);
   bird.scale = 0.7;
-  
-  //uncomment for debugging
   bird.debug = debug;
-  bird.maxSpeed = 50;
+  bird.maxSpeed = 20;
 }
 
 function draw() {
   background(bkImg);
-  
   
   if(keyWentDown('x'))
     resetBird();
   
   //allow bird to hit targets
   bird.displace(targets);
+  //falling targets properly
+  bird.overlap(targets,fallTargets);
   //allow target to hit themself
   targets.displace(targets);
   //allow all sprites to rest on ground
@@ -119,14 +117,15 @@ function mouseReleased() {
   //calcualting throwing speed
   var throwSpeed = int(dist(bird.position.x, bird.position.y, 110, 190)/10);
   
-  //console.log(throwSpeed);
-  
-  //throwing bird towards (110,190)
+  //throwing bird towards the top of slingshot
   bird.attractionPoint(throwSpeed, 110, 190);
   bird.setSpeed(bird.getSpeed(), bird.getDirection());
-  //console.log(mouseX,mouseY);
 }
-  
+ 
+function fallTargets(bird, target){
+  target.setCollider("circle", 0, 0, 40);
+}
+
 function resetBird(){
   attractToSlingshot = true;
   leaveBird = false;
